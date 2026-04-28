@@ -164,7 +164,7 @@ function DoctorPage() {
               })}
             </div>
             <div className="mt-4 grid grid-cols-2 gap-3 border-t pt-4 text-sm">
-              <div><p className="text-xs text-muted-foreground">Scans reviewed</p><p className="text-lg font-bold"><CountUp end={analytics.scanCount} /></p></div>
+              <div><p className="text-xs text-muted-foreground">Scans reviewed</p><p className="text-lg font-bold"><CountUp to={analytics.scanCount} /></p></div>
               <div><p className="text-xs text-muted-foreground">Avg wait</p><p className="text-lg font-bold">12<span className="text-xs"> min</span></p></div>
             </div>
           </Card>
@@ -221,7 +221,7 @@ function Kpi({ icon, label, value, tone }: any) {
         <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">{label}</p>
         <div className={`flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br ${toneCls} text-white`}>{icon}</div>
       </div>
-      <p className="mt-2 text-3xl font-bold"><CountUp end={value} /></p>
+      <p className="mt-2 text-3xl font-bold"><CountUp to={value} /></p>
     </Card>
   );
 }

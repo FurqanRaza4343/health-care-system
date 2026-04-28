@@ -10,6 +10,8 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SymptomsRouteImport } from './routes/symptoms'
+import { Route as ImageAnalyzerRouteImport } from './routes/image-analyzer'
+import { Route as DoctorRouteImport } from './routes/doctor'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +19,16 @@ import { Route as IndexRouteImport } from './routes/index'
 const SymptomsRoute = SymptomsRouteImport.update({
   id: '/symptoms',
   path: '/symptoms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ImageAnalyzerRoute = ImageAnalyzerRouteImport.update({
+  id: '/image-analyzer',
+  path: '/image-analyzer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DoctorRoute = DoctorRouteImport.update({
+  id: '/doctor',
+  path: '/doctor',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardRoute = DashboardRouteImport.update({
@@ -39,12 +51,16 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/doctor': typeof DoctorRoute
+  '/image-analyzer': typeof ImageAnalyzerRoute
   '/symptoms': typeof SymptomsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/doctor': typeof DoctorRoute
+  '/image-analyzer': typeof ImageAnalyzerRoute
   '/symptoms': typeof SymptomsRoute
 }
 export interface FileRoutesById {
@@ -52,20 +68,37 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/dashboard': typeof DashboardRoute
+  '/doctor': typeof DoctorRoute
+  '/image-analyzer': typeof ImageAnalyzerRoute
   '/symptoms': typeof SymptomsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/dashboard' | '/symptoms'
+  fullPaths:
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/doctor'
+    | '/image-analyzer'
+    | '/symptoms'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/dashboard' | '/symptoms'
-  id: '__root__' | '/' | '/auth' | '/dashboard' | '/symptoms'
+  to: '/' | '/auth' | '/dashboard' | '/doctor' | '/image-analyzer' | '/symptoms'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/dashboard'
+    | '/doctor'
+    | '/image-analyzer'
+    | '/symptoms'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   DashboardRoute: typeof DashboardRoute
+  DoctorRoute: typeof DoctorRoute
+  ImageAnalyzerRoute: typeof ImageAnalyzerRoute
   SymptomsRoute: typeof SymptomsRoute
 }
 
@@ -76,6 +109,20 @@ declare module '@tanstack/react-router' {
       path: '/symptoms'
       fullPath: '/symptoms'
       preLoaderRoute: typeof SymptomsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/image-analyzer': {
+      id: '/image-analyzer'
+      path: '/image-analyzer'
+      fullPath: '/image-analyzer'
+      preLoaderRoute: typeof ImageAnalyzerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/doctor': {
+      id: '/doctor'
+      path: '/doctor'
+      fullPath: '/doctor'
+      preLoaderRoute: typeof DoctorRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard': {
@@ -106,6 +153,8 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   DashboardRoute: DashboardRoute,
+  DoctorRoute: DoctorRoute,
+  ImageAnalyzerRoute: ImageAnalyzerRoute,
   SymptomsRoute: SymptomsRoute,
 }
 export const routeTree = rootRouteImport
