@@ -50,6 +50,27 @@ function RootShell({ children }: { children: React.ReactNode }) {
         {children}
         <Toaster richColors position="top-right" />
         <Scripts />
+        <script
+          type="text/javascript"
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function(d, t) {
+                  var v = d.createElement(t), s = d.getElementsByTagName(t)[0];
+                  v.onload = function() {
+                    window.voiceflow.chat.load({
+                      verify: { projectID: '69f78379d28b13321c8dc0fd' },
+                      url: 'https://general-runtime.voiceflow.com',
+                      versionID: 'production',
+                      voice: {
+                        url: "https://runtime-api.voiceflow.com"
+                      }
+                    });
+                  }
+                  v.src = "https://cdn.voiceflow.com/widget-next/bundle.mjs"; v.type = "text/javascript"; s.parentNode.insertBefore(v, s);
+              })(document, 'script');
+            `,
+          }}
+        />
       </body>
     </html>
   );

@@ -45,13 +45,32 @@ function Symptoms() {
   const submit = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("diagnose-symptoms", {
-        body: { symptoms: description, bodyAreas: areas, severity: severity[0], duration },
+      const apiKey = import.meta.env.VITE_MISTRAL_API_KEY;
+      if (!apiKey) throw new Error("Mistral API key is missing.");
+
+      const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`
+        },
+        body: JSON.stringify({
+          model: "mistral-small-latest",
+          messages: [
+            { role: "system", content: "You are an AI medical symptom checker. Based on the user's symptoms, provide a JSON response exactly in this format: {\"urgency\": \"emergency\" | \"urgent\" | \"routine\" | \"self-care\", \"summary\": \"short details of the condition\", \"possible_conditions\": [{\"name\": \"\", \"likelihood\": \"high\"|\"medium\"|\"low\", \"description\": \"\"}], \"recommendations\": [], \"recommended_specialists\": [], \"red_flags\": []}. Return ONLY valid JSON." },
+            { role: "user", content: `Symptoms: ${description}\nAreas: ${areas.join(", ")}\nSeverity: ${severity[0]}/10\nDuration: ${duration}` }
+          ],
+          response_format: { type: "json_object" }
+        })
       });
-      if (error) throw error;
-      if (data?.error) throw new Error(data.error);
-      const dx = data.diagnosis as Diagnosis;
+
+      if (!response.ok) throw new Error("Failed to fetch diagnosis from AI.");
+      
+      const data = await response.json();
+      const content = data.choices[0].message.content;
+      const dx = JSON.parse(content) as Diagnosis;
       setResult(dx);
+
       if (user) {
         await supabase.from("symptom_checks").insert({
           patient_id: user.id, symptoms: { description }, body_areas: areas, severity: severity[0], duration, ai_diagnosis: dx, urgency: dx.urgency,
@@ -158,7 +177,7 @@ function ResultView({ result, onReset }: { result: Diagnosis; onReset: () => voi
         {result.urgency === "emergency" && (
           <div className="mb-6 flex items-center gap-3 rounded-2xl border border-destructive/50 bg-destructive/10 p-4 animate-fade-in-up">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive text-destructive-foreground animate-pulse-ring"><AlertTriangle className="h-5 w-5" /></div>
-            <div><div className="font-semibold text-destructive">Possible emergency</div><div className="text-sm">Call your local emergency number immediately (911 in the US).</div></div>
+            <div><div className="font-semibold text-destructive">Possible emergency</div><div className="text-sm">call in this number +923132194343 AND EMAIL IS furqanraza978@gmail.com</div></div>
           </div>
         )}
 
