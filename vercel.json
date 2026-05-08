@@ -7,6 +7,11 @@
     }
   ],
   "routes": [
+    { "src": "/assets/(.*)", "dest": "dist/client/assets/$1" },
+    { "src": "/favicon.ico", "dest": "public/favicon.ico" },
+    { "src": "/favicon.png", "dest": "public/favicon.png" },
+    { "src": "/favicon.svg", "dest": "public/favicon.svg" },
+    { "src": "/favicon-fallback.svg", "dest": "public/favicon-fallback.svg" },
     { "src": "/(.*)", "dest": "dist/server/index.js" }
   ]
 }
